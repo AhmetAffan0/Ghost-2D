@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"image/color"
 	_ "image/png"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -84,8 +85,11 @@ func (c *char) draw(screen *ebiten.Image) {
 	}
 
 	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Scale(2, 2)
 	op.GeoM.Translate(float64(c.x)/unit, float64(c.y)/unit)
 	screen.DrawImage(s, op)
+
+	//fmt.Println(s)
 }
 
 type Game struct {
@@ -93,6 +97,7 @@ type Game struct {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	screen.Fill(color.White)
 	g.ghost.draw(screen)
 
 	msg := fmt.Sprintf("TPS: %0.2f\nFloating Ghost.", ebiten.ActualTPS())
@@ -100,7 +105,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth int, outsideHeight int) (screenWidth int, screenHeight int) {
-	return 1000, 950
+	return 1920, 1080
 }
 
 func (g *Game) Update() error {
@@ -109,20 +114,20 @@ func (g *Game) Update() error {
 	}
 
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		g.ghost.vy -= 2 * unit
+		g.ghost.vy = -5 * unit
 	} else if ebiten.IsKeyPressed(ebiten.KeyS) {
-		g.ghost.vy += 2 * unit
+		g.ghost.vy = 5 * unit
 	} else if ebiten.IsKeyPressed(ebiten.KeyA) {
-		g.ghost.vx -= 2 * unit
+		g.ghost.vx = -5 * unit
 	} else if ebiten.IsKeyPressed(ebiten.KeyD) {
-		g.ghost.vx += 2 * unit
+		g.ghost.vx = 5 * unit
 	}
 	g.ghost.update()
 	return nil
 }
 
 func main() {
-	ebiten.SetWindowSize(1000, 950)
+	ebiten.SetWindowSize(1920, 1080)
 	ebiten.SetFullscreen(true)
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		panic(err)
