@@ -1,2 +1,2 @@
 # Ghost-2D
-Just floating ghost in ebitengine
+Just floating ghosts in ebitengine
